@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  nginx:
+    image: 'nginx:1.19.3'
+    depends_on:
+    - 'vault'
+    ports:
+    - '80:80'
+    volumes:
+    - './etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf'
+  vault:
+    image: 'vault:1.6.3'
+    container_name: 'vault'
+    restart: 'always'
+    depends_on:
+    - 'postgresql'
+    cap_add:
+    - 'IPC_LOCK'
+    command: ['server', '-config', '/vault/config.json']
+    expose:
+    - '8200'
+    environment:
+    - 'VAULT_ADDR=http://localhost:8200'
+    volumes:
+    - './vault/config.json:/vault/config.json'
+    - 'logs:/vault/logs'
+  postgresql:
+    image: 'postgres:13.2'
+    restart: 'always'
+    environment:
+    - 'POSTGRES_DB=vault'
+    - 'POSTGRES_USER=vault'
+    - 'POSTGRES_PASSWORD=vault'
+    expose:
+    - '5432'
+    volumes:
+    - './docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
+    - 'postgresql:/var/lib/postgresql/data'
+volumes:
+  logs:
+  postgresql:
