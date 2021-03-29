@@ -1,4 +1,4 @@
-ui = true
+ui = false
 storage "postgresql" {
   connection_url = "postgres://vault:vault@postgresql:5432/vault?sslmode=disable"
 }

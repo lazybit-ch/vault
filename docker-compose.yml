@@ -16,12 +16,11 @@ services:
     - 'postgresql'
     cap_add:
     - 'IPC_LOCK'
-    command: ['server', '-config', '/vault/config.json']
     expose:
     - '8200'
-    environment:
-    - 'VAULT_ADDR=http://localhost:8200'
+    command: ['server', '--config', '/vault/config.json']
     volumes:
+    - 'certs:/certs'
     - './vault/config.json:/vault/config.json'
     - 'logs:/vault/logs'
   postgresql:
@@ -36,6 +35,23 @@ services:
     volumes:
     - './docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
     - 'postgresql:/var/lib/postgresql/data'
+  openssh:
+    image: 'openssh-server'
+    restart: 'always'
+    volumes:
+    - 'openssh:/etc/ssh'
+    - 'certs:/certs:ro'
+    - './etc/ssh/sshd_config:/etc/ssh/sshd_config:ro'
+    - './etc/ssh/ssh_config:/etc/ssh/ssh_config:ro'
+    cap_add:
+    - 'SYS_CHROOT'
+    - 'SETGID'
+    - 'SETUID'
+    - 'CHOWN'
+    ports:
+    - '22:22'
 volumes:
   logs:
   postgresql:
+  certs:
+  openssh:
