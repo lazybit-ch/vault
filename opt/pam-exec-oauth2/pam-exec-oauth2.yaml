@@ -1,0 +1,8 @@
+{
+    client-id: "vault",
+    client-secret: "a7681eb9-f0fa-46bd-adfe-068007adbd7b",
+    scopes: ["email", "openid", "profile"],
+    endpoint-auth-url: "https://keycloak.k8s.yields.io/auth/realms/vault/protocol/openid-connect/auth",
+    endpoint-token-url: "https://keycloak.k8s.yields.io/auth/realms/vault/protocol/openid-connect/token",
+    extra-parameters: {},
+}

@@ -1,9 +1,9 @@
-#	$OpenBSD: sshd_config,v 1.103 2018/04/09 20:41:22 tj Exp $
+#	$OpenBSD: sshd_config,v 1.101 2017/03/14 07:19:07 djm Exp $
 
 # This is the sshd server system-wide configuration file.  See
 # sshd_config(5) for more information.
 
-# This sshd was compiled with PATH=/bin:/usr/bin:/sbin:/usr/sbin
+# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
 # The strategy used for options in the default sshd_config shipped with
 # OpenSSH is to specify options with their default value where
@@ -38,9 +38,8 @@ TrustedUserCAKeys /certs/ca.pem
 
 #PubkeyAuthentication yes
 
-# The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
-# but this is overridden so installations will only check .ssh/authorized_keys
-AuthorizedKeysFile	.ssh/authorized_keys
+# Expect .ssh/authorized_keys2 to be disregarded by default in future.
+#AuthorizedKeysFile	.ssh/authorized_keys .ssh/authorized_keys2
 
 #AuthorizedPrincipalsFile none
 
@@ -56,11 +55,12 @@ AuthorizedKeysFile	.ssh/authorized_keys
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
-PasswordAuthentication no
+PasswordAuthentication yes
 #PermitEmptyPasswords no
 
-# Change to no to disable s/key passwords
-#ChallengeResponseAuthentication yes
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
 
 # Kerberos options
 #KerberosAuthentication no
@@ -71,6 +71,8 @@ PasswordAuthentication no
 # GSSAPI options
 #GSSAPIAuthentication no
 #GSSAPICleanupCredentials yes
+#GSSAPIStrictAcceptorCheck yes
+#GSSAPIKeyExchange no
 
 # Set this to 'yes' to enable PAM authentication, account processing,
 # and session processing. If this is enabled, PAM authentication will
@@ -84,22 +86,22 @@ PasswordAuthentication no
 UsePAM yes
 
 #AllowAgentForwarding yes
-# Feel free to re-enable these if your use case requires them.
-AllowTcpForwarding no
-GatewayPorts no
-X11Forwarding no
+#AllowTcpForwarding yes
+#GatewayPorts no
+X11Forwarding yes
 #X11DisplayOffset 10
 #X11UseLocalhost yes
-PermitTTY no
-#PrintMotd yes
+#PermitTTY yes
+PrintMotd no
 #PrintLastLog yes
 #TCPKeepAlive yes
+#UseLogin no
 #PermitUserEnvironment no
 #Compression delayed
 #ClientAliveInterval 0
 #ClientAliveCountMax 3
 #UseDNS no
-#PidFile /run/sshd.pid
+#PidFile /var/run/sshd.pid
 #MaxStartups 10:30:100
 #PermitTunnel no
 #ChrootDirectory none
@@ -108,8 +110,11 @@ PermitTTY no
 # no default banner path
 #Banner none
 
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
 # override default of no subsystems
-Subsystem	sftp	/usr/lib/ssh/sftp-server
+Subsystem	sftp	/usr/lib/openssh/sftp-server
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
