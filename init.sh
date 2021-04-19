@@ -52,8 +52,8 @@ docker run --rm -i \
     safe vault write ssh/roles/default -<<EOF
 {
   "allow_user_certificates": true,
-  "allowed_users": "git",
-  "allowed_extensions": "permit-pty,permit-port-forwarding",
+  "allowed_users": "*",
+  "allowed_extensions": "permit-pty,permit-port-forwarding,login@yields.io,login@github.com",
   "default_extensions": [
     {
       "permit-pty": ""
@@ -78,9 +78,12 @@ docker run --rm -i \
     safe vault write -field=signed_key ssh/sign/default -<<EOF > ~/.ssh/id_rsa-cert.pub
 {
   "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDEnSMccDhxsv1VthTbPg2r4V0wSESHqx0KGaD87LhL1qwRlsA10ALfGU0YH28gPsAmZEFAPYD3DxVeIaxBruLoKrCVOZkB32f2IWoOUMRR9fvNbOZzGJo4RaW/xpHF3UrlTNgsOvP2bEso7y7765mwh1hOX9iFS/2Np3VOVhWbeqQCo7KWR34oHdZrB3cLnT6vbZTTMRZrmzOmCaK3hUiMOt4P2eKMI2OofXOFp52bE/448nDEoa/ZV3KaxZonUKvc2YlvQ1zvAdD6j7P49mRYsvXqK2GufBvsfKk4Uc+FXIfpxSjVPjTE83+afJ8ci8KaFSJeRYlMoX6Y4vfhj0w3 bmassey@hacklabs-2",
+  "valid_principals": "*",
   "extensions": {
     "permit-pty": "",
-    "permit-port-forwarding": ""
+    "permit-port-forwarding": "",
+    "login@yields.io": "bradley.massey@yields.io",
+    "login@github.com": "masseybradley"
   }
 }
 EOF
