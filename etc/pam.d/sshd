@@ -1,2 +1,3 @@
+# auth    optional pam_script.so
+session required pam_mkhomedir.so skel=/etc/skel/
 auth    sufficient pam_exec.so expose_authtok /opt/pam-exec-oauth2/pam-exec-oauth2
-auth    optional /usr/lib64/security/pam_script.so
